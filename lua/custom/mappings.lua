@@ -27,4 +27,6 @@ M.crates = {
   }
 }
 
+require("custom.language_specific_commands.matlab")
+
 return M

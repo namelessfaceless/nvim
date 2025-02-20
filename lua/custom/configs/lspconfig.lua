@@ -2,7 +2,7 @@ local config = require("plugins.configs.lspconfig")
 
 local on_attach = function(client, bufnr)
   config.on_attach(client, bufnr)
-  
+
   -- Keybinding to show hover documentation
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>h', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
   
@@ -19,7 +19,7 @@ local lspconfig = require("lspconfig")
 
 local servers = {
   "pyright",
-  "ruff_lsp",
+  "ruff_lsp"
 }
 
 for _, lsp in ipairs(servers) do
@@ -37,6 +37,20 @@ for _, lsp in ipairs(servers) do
     }
   })
 end
+
+lspconfig.hls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {'haskell', 'lhaskell', 'cabal'}
+}
+
+
+
+lspconfig.matlab_ls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {'matlab'}
+}
 
 -- Function to show diagnostics on hover
 vim.api.nvim_create_autocmd("CursorHold", {

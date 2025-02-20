@@ -6,6 +6,8 @@ local plugins = {
     opts = {
       ensure_installed = {
         "rust-analyzer",
+        "haskell-language-server",
+        "matlab-language-server",
       },
     },
   },
