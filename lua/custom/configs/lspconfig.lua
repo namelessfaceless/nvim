@@ -48,3 +48,15 @@ lspconfig.matlab_ls.setup{
   capabilities = capabilities,
   filetypes = {'matlab'}
 }
+
+lspconfig.clangd.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {'c', 'cpp'}
+}
+
+lspconfig.lua_language_server.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {'lua'}
+}

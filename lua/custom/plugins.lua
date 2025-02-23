@@ -8,6 +8,8 @@ local plugins = {
         "rust-analyzer",
         "haskell-language-server",
         "matlab-language-server",
+        "clangd",
+        "lua-language-server"
       },
     },
   },
@@ -79,6 +81,12 @@ local plugins = {
       table.insert(M.sources, {name = "crates"})
       return M
     end,
+  },
+  {
+    "susliko/tla.nvim",
+    config = function ()
+    require("tla").setup()
+    end
   }
 }
 return plugins
