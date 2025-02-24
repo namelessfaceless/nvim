@@ -84,8 +84,12 @@ local plugins = {
   },
   {
     "susliko/tla.nvim",
+    ft = {'tla'},
     config = function ()
-    require("tla").setup()
+    require("tla").setup{
+        java_executable = "/usr/bin/java",
+        java_opts = {'-XX:+UseParallelGC'},
+      }
     end
   }
 }
