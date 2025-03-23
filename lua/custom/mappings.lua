@@ -46,5 +46,6 @@ vim.api.nvim_create_autocmd("CursorHold", {
 vim.api.nvim_set_keymap("n", "<leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>", { noremap = true, silent = true })
 
 require "custom.language_specific_commands.matlab"
+require "custom.language_specific_commands.rust"
 
 return M

@@ -73,8 +73,17 @@ lspconfig.clangd.setup {
   filetypes = { "c", "cpp" },
 }
 
+local function marksman_on_attach(client, bufnr)
+  -- Call the global version first
+  on_attach(client, bufnr)
+
+  -- Then do the Markdown-specific logic
+  -- vim.api.nvim_set_option_value("spell", true, { buf = bufnr })
+  -- vim.api.nvim_set_option_value("spelllang", "en_us", { buf = bufnr })
+end
+
 lspconfig.marksman.setup {
-  on_attach = on_attach,
+  on_attach = marksman_on_attach,
   capabilities = capabilities,
   filetypes = { "markdown" },
 }
