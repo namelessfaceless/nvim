@@ -47,5 +47,6 @@ vim.api.nvim_set_keymap("n", "<leader>e", "<cmd>lua vim.diagnostic.open_float()<
 
 require "custom.language_specific_commands.matlab"
 require "custom.language_specific_commands.rust"
+require "custom.language_specific_commands.markdown"
 
 return M
