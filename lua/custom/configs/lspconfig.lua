@@ -65,6 +65,7 @@ lspconfig.matlab_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "matlab" },
+  require "custom.language_specific_commands.matlab",
 }
 
 lspconfig.clangd.setup {
@@ -73,17 +74,9 @@ lspconfig.clangd.setup {
   filetypes = { "c", "cpp" },
 }
 
-local function marksman_on_attach(client, bufnr)
-  -- Call the global version first
-  on_attach(client, bufnr)
-
-  -- Then do the Markdown-specific logic
-  -- vim.api.nvim_set_option_value("spell", true, { buf = bufnr })
-  -- vim.api.nvim_set_option_value("spelllang", "en_us", { buf = bufnr })
-end
-
 lspconfig.marksman.setup {
-  on_attach = marksman_on_attach,
+  on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "markdown" },
+  require "custom.language_specific_commands.markdown",
 }
