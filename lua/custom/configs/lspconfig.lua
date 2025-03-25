@@ -1,36 +1,6 @@
 local config = require "plugins.configs.lspconfig"
 
-local on_attach = function(client, bufnr)
-  config.on_attach(client, bufnr)
-
-  -- Keybinding to show hover documentation
-  vim.api.nvim_buf_set_keymap(
-    bufnr,
-    "n",
-    "<leader>h",
-    "<cmd>lua vim.lsp.buf.hover()<CR>",
-    { noremap = true, silent = true }
-  )
-
-  -- Keybinding to show diagnostics
-  vim.api.nvim_buf_set_keymap(
-    bufnr,
-    "n",
-    "<leader>e",
-    '<cmd>lua vim.diagnostic.open_float(nil, { focusable = false, close_events = {"BufLeave", "CursorMoved", "InsertEnter", "FocusLost"}, border = "rounded", source = "always", prefix = " ", scope = "cursor" })<CR>',
-    { noremap = true, silent = true }
-  )
-
-  -- Keybinding to show signature help
-  vim.api.nvim_buf_set_keymap(
-    bufnr,
-    "n",
-    "<leader>s",
-    "<cmd>lua vim.lsp.buf.signature_help()<CR>",
-    { noremap = true, silent = true }
-  )
-end
-
+local on_attach = config.on_attach
 local capabilities = config.capabilities
 
 local lspconfig = require "lspconfig"

@@ -9,13 +9,14 @@ local plugins = {
         "rust-analyzer",
         "haskell-language-server",
         "matlab-language-server",
+        "lua-language-server",
         "clangd",
         "marksman",
+        "ruff",
         "pyright",
 
         --- formatters
         "stylua",
-        "black",
         "clang-format",
         "fourmolu",
       },
