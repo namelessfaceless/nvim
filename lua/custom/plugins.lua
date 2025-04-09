@@ -13,7 +13,7 @@ local plugins = {
         "clangd",
         "marksman",
         "ruff",
-        "pyright",
+        "jedi-language-server",
 
         --- formatters
         "stylua",

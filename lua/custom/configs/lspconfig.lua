@@ -5,25 +5,11 @@ local capabilities = config.capabilities
 
 local lspconfig = require "lspconfig"
 
-local servers = {
-  "pyright",
+lspconfig.jedi_language_server.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "python" },
 }
-
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    filetypes = { "python" },
-    handlers = {
-      ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
-        config = config or {}
-        config.virtual_text = false
-        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
-      end,
-      ["textDocument/signatureHelp"] = function() end, -- Disable automatic signature help
-    },
-  }
-end
 
 lspconfig.hls.setup {
   on_attach = on_attach,
