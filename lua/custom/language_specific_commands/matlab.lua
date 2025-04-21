@@ -1,45 +1,65 @@
--- Global variables to store the MATLAB terminal buffer and job ID
+-- ------------------------------------------------------------------------
+-- MATLAB runner: vertical split, CLI-only with no display, reusable buffer
+-- ------------------------------------------------------------------------
 local matlab_term_buf = nil
 local matlab_term_job = nil
 
--- Create the "RunMatlab" user command
 vim.api.nvim_create_user_command("RunMatlab", function()
-  -- Get the absolute path of the current file
+  -- full path to current .m file, escape single quotes
   local file = vim.fn.expand "%:p"
-  -- Escape single quotes by doubling them for MATLAB's string literal.
   local matlab_file = file:gsub("'", "''")
-  -- Construct the command to run MATLAB in batch mode, executing the current file.
-  local cmd = "matlab -batch \"run('" .. matlab_file .. "')\""
 
-  -- If we already have a MATLAB terminal and it's valid, reuse it.
+  -- build your CLI command: no desktop panels, no splash,
+  -- run the script, and stay in the prompt
+  local cmd = table.concat({
+    "matlab",
+    "-nodisplay",
+    "-nodesktop",
+    "-nosplash",
+    "-r",
+    string.format(
+      "'try, run(''%s''), catch, disp(getReport(lasterror)), end, disp(\"<< done >>\"), pause'",
+      matlab_file
+    ),
+  }, " ")
+
   if matlab_term_buf and vim.api.nvim_buf_is_valid(matlab_term_buf) and matlab_term_job then
-    -- Check if the terminal buffer is visible in any window.
+    -- if buffer exists, show or jump to it
     local wins = vim.fn.win_findbuf(matlab_term_buf)
     if #wins == 0 then
-      -- If not visible, open it in a vertical split.
-      vim.cmd "split"
+      vim.cmd "vsplit"
       vim.cmd("buffer " .. matlab_term_buf)
     else
-      -- Otherwise, switch focus to that window.
       vim.api.nvim_set_current_win(wins[1])
     end
-    -- Send the MATLAB command to the terminal. (You can add a clear command here if desired.)
     vim.api.nvim_chan_send(matlab_term_job, cmd .. "\n")
   else
-    -- If the MATLAB terminal doesn't exist, open a new vertical split terminal.
-    vim.cmd "split"
+    -- new vertical split + terminal
+    vim.cmd "vsplit"
     vim.cmd "terminal"
-    -- Store the terminal buffer and job ID for future reuse.
     matlab_term_buf = vim.api.nvim_get_current_buf()
     matlab_term_job = vim.b.terminal_job_id
-    -- Optionally, rename the terminal buffer for clarity.
-    vim.api.nvim_buf_set_name(matlab_term_buf, "MATLAB Output")
-    -- Send the MATLAB command to run the current file.
+    vim.api.nvim_buf_set_name(matlab_term_buf, "MATLAB-CLI")
     vim.api.nvim_chan_send(matlab_term_job, cmd .. "\n")
   end
 end, {})
 
--- Map <space>+r+m (i.e. <leader>rm) to run the MATLAB code
 vim.keymap.set("n", "<leader>mr", ":RunMatlab<CR>", { noremap = true, silent = true })
 
-print "MATLAB Keybinds Loaded"
+-- ------------------------------------------------------------------------
+-- Live‑Script style commenting: prepend "%[" on each line in a range
+-- ------------------------------------------------------------------------
+vim.api.nvim_create_user_command("CommentLive", function(opts)
+  local start_line, end_line = opts.line1, opts.line2
+  -- the replacement inserts literal "%[" at start of each line
+  vim.cmd(string.format("%d,%d s/^/%%[/", start_line, end_line))
+end, {
+  range = true,
+  desc = "Prepend '%[' to each line (MATLAB Live Script style)",
+})
+
+-- map <leader>mc in normal+visual to comment
+vim.keymap.set("n", "<leader>mc", ":'<,'>CommentLive<CR>", { noremap = true, silent = true })
+vim.keymap.set("v", "<leader>mc", ":CommentLive<CR>", { noremap = true, silent = true })
+
+print "MATLAB Keybinds & Live‑Script Commenter Loaded"
