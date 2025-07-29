@@ -7,8 +7,8 @@ M.ui = {
   hl_add = {},
   hl_override = {},
   changed_themes = {},
-  theme_toggle = { "nightfox", "one_light" },
-  theme = "nightfox", -- default theme
+  theme_toggle = { "ayu_light", "one_light" },
+  theme = "ayu_light", -- default theme
   transparency = false,
   lsp_semantic_tokens = false, -- needs nvim v0.9, just adds highlight groups for lsp semantic tokens
 
