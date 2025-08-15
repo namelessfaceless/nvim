@@ -17,6 +17,9 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.wo.conceallevel = 2
     -- and set it to conceal in normal and command modes
     vim.wo.concealcursor = "nc"
+    -- wrap text at 80 chars and show a visual line guide
+    vim.opt_local.textwidth = 60
+    vim.opt_local.formatoptions:append "t"
   end,
 })
 
