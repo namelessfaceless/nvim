@@ -6,7 +6,8 @@ vim.keymap.set(
 )
 -- Create an autocommand for markdown filetype using Neovim's Lua API
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown", -- Only for files with filetype 'markdown'
+  pattern = "markdown",
+  "tex", -- Only for files with filetype 'markdown'
   callback = function()
     -- Enable spell checking locally for the buffer
     vim.opt_local.spell = true
