@@ -19,6 +19,9 @@ local plugins = {
         "stylua",
         "clang-format",
         "fourmolu",
+
+        --- other
+        "tree-sitter-cli",
       },
     },
   },
@@ -185,6 +188,12 @@ local plugins = {
       -- VimTeX configuration goes here, e.g.
       vim.g.vimtex_view_method = "zathura"
     end,
+  },
+
+  {
+    "jbyuki/nabla.nvim",
+    lazy = true,
+    ft = { "markdown", "tex" }, -- load only when editing Markdown/TeX
   },
 }
 

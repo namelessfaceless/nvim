@@ -34,5 +34,5 @@ lspconfig.marksman.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "markdown" },
-  require "custom.language_specific_commands.markdown",
+  require "custom.language_specific_commands.markdown_and_tex",
 }
