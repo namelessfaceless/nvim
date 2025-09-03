@@ -251,13 +251,129 @@ local function new_hub_note(opts)
     vim.cmd.edit(path)
   end
 end
+-- ---------- :ZkNewLit ----------
+-- Lightweight Literature (three-pass) note creator.
+-- Files live under: Permanent Notes/Literature
+-- Naming: LIT-YYYYMMDDHHMMSS-<slug>.md
+local literature_dir = permanent_dir .. "/Literature Notes"
+
+local function new_literature_note(opts)
+  local title = table.concat(opts.fargs or {}, " ")
+  if title == "" then
+    title = vim.fn.input "Literature note title (paper title or handle): "
+  end
+  if not title or title == "" then
+    vim.notify("Aborted: empty title.", vim.log.levels.WARN)
+    return
+  end
+
+  local id = "LIT-" .. os.date "%Y%m%d%H%M%S"
+  local slug = slugify(title)
+  local filename = string.format("%s-%s.md", id, slug)
+
+  ensure_dir(literature_dir)
+  local path = literature_dir .. "/" .. filename
+
+  local created = iso_utc()
+
+  local ok = write_if_missing(path, {
+    "---",
+    "id: " .. id,
+    "title: " .. title,
+    "type: literature",
+    "created: " .. created,
+    "modified: " .. created,
+    "citekey: ", -- just paste your Zotero citekey here
+    "---",
+    "",
+    "# " .. title,
+    "",
+    "## First Pass",
+    "**Category:** ",
+    "",
+    "**Context:** ",
+    "",
+    "**Correctness:** ",
+    "",
+    "**Contributions:** ",
+    "",
+    "**Clarity:** ",
+    "",
+    "## Second Pass",
+    "**What is the main thrust?**",
+    "",
+    "**What is the supporting evidence?**",
+    "",
+    "**What are the key findings?**",
+    "",
+    "## Third Pass",
+    "**Recreation Notes:**",
+    "",
+    "**Hidden Findings:**",
+    "",
+    "**Weak Points? Strong Points?**",
+    "",
+  })
+  if ok then
+    vim.cmd.edit(path)
+  end
+end
+
+vim.api.nvim_create_user_command(
+  "ZkNewLit",
+  new_literature_note,
+  { nargs = "*", desc = "Create a new literature ZK note (three-pass template) and open it" }
+)
+
+-- Keymap (optional): <leader>zl
 
 vim.api.nvim_create_user_command(
   "ZkNewHub",
   new_hub_note,
   { nargs = "*", desc = "Create a new hub (structure) note and open it" }
 )
+local thesis_dir = permanent_dir .. "/Thesis"
 
+local function new_thesis_note(opts)
+  local title = table.concat(opts.fargs or {}, " ")
+  if title == "" then
+    title = vim.fn.input "Thesis note title: "
+  end
+  if not title or title == "" then
+    vim.notify("Aborted: empty title.", vim.log.levels.WARN)
+    return
+  end
+
+  local id = "DR-" .. os.date "%Y%m%d%H%M%S"
+  local slug = slugify(title)
+  local filename = string.format("%s-%s.md", id, slug)
+
+  ensure_dir(thesis_dir)
+  local path = thesis_dir .. "/" .. filename
+
+  local created = iso_utc()
+
+  local ok = write_if_missing(path, {
+    "---",
+    "id: " .. id,
+    "title: " .. title,
+    "type: thesis",
+    "created: " .. created,
+    "modified: " .. created,
+    "tags: []",
+    "---",
+    "",
+  })
+  if ok then
+    vim.cmd.edit(path)
+  end
+end
+
+vim.api.nvim_create_user_command(
+  "ZkNewThesis",
+  new_thesis_note,
+  { nargs = "*", desc = "Create a new thesis ZK note and open it" }
+)
 -- ---------- keymaps ----------
 -- <leader>zn  : new permanent
 -- <leader>zd  : today's daily
@@ -265,3 +381,5 @@ vim.api.nvim_create_user_command(
 vim.keymap.set("n", "<leader>zn", ":ZkNewPermanent ", { desc = "ZK: New permanent note" })
 vim.keymap.set("n", "<leader>zd", ":ZkNewDaily<CR>", { desc = "ZK: Open/create today's daily" })
 vim.keymap.set("n", "<leader>zh", ":ZkNewHub ", { desc = "ZK: New hub (structure) note" })
+vim.keymap.set("n", "<leader>zl", ":ZkNewLit ", { desc = "ZK: New literature note" })
+vim.keymap.set("n", "<leader>zt", ":ZkNewThesis ", { desc = "ZK: New thesis note" })
