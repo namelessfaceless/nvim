@@ -7,4 +7,5 @@ vim.keymap.set("i", "jj", "<ESC>")
 
 require "custom.zk"
 require "custom.git_quickpush"
+require "custom.journal"
 print "Custom init settings loaded."

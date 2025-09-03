@@ -36,3 +36,10 @@ lspconfig.marksman.setup {
   filetypes = { "markdown" },
   require "custom.language_specific_commands.markdown_and_tex",
 }
+
+lspconfig.texlab.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "tex" },
+  require "custom.language_specific_commands.markdown_and_tex",
+}
