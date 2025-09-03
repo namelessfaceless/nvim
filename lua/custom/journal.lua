@@ -1,4 +1,28 @@
+-- === Journal helpers ===
 local journal_dir = vim.fn.expand "~/Documents/Dane's Vault/Writing/Journal"
+
+-- ---------- utilities ----------
+local function ensure_dir(path)
+  vim.fn.mkdir(path, "p")
+end
+
+local function iso_utc()
+  return os.date "!%Y-%m-%dT%H:%M:%SZ"
+end
+
+-- ---------- create file helper ----------
+local function write_if_missing(path, lines)
+  if vim.fn.filereadable(path) == 0 then
+    local fh = io.open(path, "w")
+    if not fh then
+      vim.notify("Failed to create file at " .. path, vim.log.levels.ERROR)
+      return false
+    end
+    fh:write(table.concat(lines, "\n"))
+    fh:close()
+  end
+  return true
+end
 
 -- ---------- :JrnlNew ----------
 -- Creates a new journal entry with JRNL-YYYYMMDD-HHMMSS.md format
