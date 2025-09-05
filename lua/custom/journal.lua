@@ -107,6 +107,7 @@ local function compile_journal()
   -- Build pandoc command
   local config_args = table.concat(config_lines, " ")
   local output_file = journal_dir .. "/compiled_journal.pdf"
+  print(journal_dir)
   local cmd = string.format(
     "cd '%s' && find . -name 'JRNL-*.md' | sort | xargs cat | pandoc %s -o '%s'",
     journal_dir,
