@@ -108,7 +108,7 @@ local plugins = {
     lazy = false,
     keys = {
       -- Will use Telescope if installed or a vim.ui.select picker otherwise
-      { "<leader>fs", "<cmd>SessionSearch<CR>", desc = "Session search" },
+      { "<leader>fs", "<cmd>AutoSession search<CR>", desc = "Session search" },
       {
         "<leader>ws",
         function()
@@ -118,14 +118,14 @@ local plugins = {
           -- optionally check if the user provided something
           if session_name ~= nil and session_name ~= "" then
             -- construct the command with the chosen name
-            vim.cmd("SessionSave " .. session_name)
+            vim.cmd("AutoSession save " .. session_name)
           else
             print "No session name given. Session not saved."
           end
         end,
         desc = "Save session (prompts for name)",
       },
-      { "<leader>wa", "<cmd>SessionToggleAutoSave<CR>", desc = "Toggle autosave" },
+      { "<leader>wa", "<cmd>AutoSession ToggleAutoSave<CR>", desc = "Toggle autosave" },
     },
     ---enables autocomplete for opts
     ---@module "auto-session"
@@ -194,6 +194,13 @@ local plugins = {
     "jbyuki/nabla.nvim",
     lazy = true,
     ft = { "markdown", "tex" }, -- load only when editing Markdown/TeX
+  },
+  {
+    "rcarriga/nvim-notify",
+    lazy = false,
+    config = function()
+      vim.notify = require "notify"
+    end,
   },
 }
 
