@@ -100,6 +100,9 @@ vim.keymap.set("n", "<leader>te", ":TaskEdit<CR>", { desc = "Edit task" })
 vim.keymap.set("n", "<leader>td", ":TaskDone<CR>", { desc = "Mark task done" })
 vim.keymap.set("n", "<leader>tm", ":TaskModify<CR>", { desc = "Modify task" })
 vim.keymap.set("n", "<leader>tp", ":TaskProject<CR>", { desc = "Show projects" })
+vim.keymap.set("n", "<leader>tS", ":TaskStart<CR>", { desc = "Start task" })
+vim.keymap.set("n", "<leader>tT", ":TaskStop<CR>", { desc = "Stop task" })
+vim.keymap.set("n", "<leader>tA", ":TaskActive<CR>", { desc = "Show active tasks" })
 
 -- Quick shortcuts for common modifications
 vim.keymap.set("n", "<leader>tH", function()
