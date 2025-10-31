@@ -10,7 +10,6 @@ local function iso_utc()
   return os.date "!%Y-%m-%dT%H:%M:%SZ"
 end
 
--- ---------- create file helper ----------
 local function write_if_missing(path, lines)
   if vim.fn.filereadable(path) == 0 then
     local fh = io.open(path, "w")
@@ -25,11 +24,10 @@ local function write_if_missing(path, lines)
 end
 
 -- ---------- :JrnlNew ----------
--- Creates a new journal entry with JRNL-YYYYMMDD-HHMMSS.md format
 local function new_journal_note()
   local timestamp = os.date "%Y%m%d-%H%M%S"
   local date_title = os.date "%A, %B %d, %Y - %I:%M %p"
-  local filename = string.format("JRNL-%s.md", timestamp)
+  local filename = "JRNL-" .. timestamp .. ".md"
 
   ensure_dir(journal_dir)
   local path = journal_dir .. "/" .. filename
@@ -51,86 +49,103 @@ local function new_journal_note()
   })
   if ok then
     vim.cmd.edit(path)
-    -- Position cursor after the title for immediate writing
     vim.cmd "normal! Go"
   end
 end
 
-vim.api.nvim_create_user_command("JrnlNew", new_journal_note, { desc = "Create a new journal entry and open it" })
-
 -- ---------- :JrnlCompile ----------
--- Compiles all JRNL-*.md files into a single PDF using pandoc
 local function compile_journal()
-  local config_file = journal_dir .. "/journal_config.txt"
+  -- Change to journal directory
+  local original_dir = vim.fn.getcwd()
+  vim.cmd("cd " .. vim.fn.fnameescape(journal_dir))
 
-  -- Create default config if it doesn't exist
+  -- Find journal files using simple glob in current directory
+  local journal_files = vim.fn.glob("JRNL-*.md", false, true)
+
+  if #journal_files == 0 then
+    vim.notify("No journal entries found", vim.log.levels.WARN)
+    vim.cmd("cd " .. vim.fn.fnameescape(original_dir))
+    return
+  end
+
+  -- Read config
+  local config_file = "journal_config.txt"
   if vim.fn.filereadable(config_file) == 0 then
     local default_config = {
-      "# Journal Compilation Config",
-      "# Edit this file to customize your journal PDF output",
-      "",
-      "# Pandoc options (one per line, without leading dashes)",
+      "# Journal Config",
       "pdf-engine=xelatex",
       "V geometry:margin=1in",
-      "V mainfont=Times New Roman",
       "V fontsize=11pt",
       "toc",
-      "toc-depth=2",
-      "",
-      "# Title page info",
       "V title=My Journal",
       "V author=Dane",
       "V date=" .. os.date "%B %Y",
     }
-
     local fh = io.open(config_file, "w")
     if fh then
       fh:write(table.concat(default_config, "\n"))
       fh:close()
-      vim.notify("Created default journal config at: " .. config_file, vim.log.levels.INFO)
+      vim.notify("Created journal config file", vim.log.levels.INFO)
     end
   end
 
-  -- Read config file
-  local config_lines = {}
+  -- Parse config
+  local config_args = {}
   local fh = io.open(config_file, "r")
   if fh then
     for line in fh:lines() do
-      local trimmed = line:match "^%s*(.-)%s*$" -- trim whitespace
+      local trimmed = line:match "^%s*(.-)%s*$"
       if trimmed ~= "" and not trimmed:match "^#" then
-        table.insert(config_lines, "--" .. trimmed)
+        if trimmed:match "^V " then
+          local var_content = trimmed:match "^V (.+)"
+          table.insert(config_args, "-V")
+          table.insert(config_args, var_content)
+        else
+          table.insert(config_args, "--" .. trimmed)
+        end
       end
     end
     fh:close()
   end
 
-  -- Build pandoc command
-  local config_args = table.concat(config_lines, " ")
-  local output_file = journal_dir .. "/compiled_journal.pdf"
-  print(journal_dir)
-  local cmd = string.format(
-    "cd '%s' && find . -name 'JRNL-*.md' | sort | xargs cat | pandoc %s -o '%s'",
-    journal_dir,
-    config_args,
-    output_file
-  )
+  -- Sort files
+  table.sort(journal_files)
 
-  vim.notify("Compiling journal entries...", vim.log.levels.INFO)
+  -- Build command as table to avoid shell escaping issues
+  local cmd_parts = { "pandoc" }
 
-  -- Run the command
-  local result = vim.fn.system(cmd)
-  local exit_code = vim.v.shell_error
+  -- Add input files
+  for _, file in ipairs(journal_files) do
+    table.insert(cmd_parts, file)
+  end
 
-  if exit_code == 0 then
-    vim.notify("Journal compiled successfully: " .. output_file, vim.log.levels.INFO)
+  -- Add config args
+  for _, arg in ipairs(config_args) do
+    table.insert(cmd_parts, arg)
+  end
+
+  -- Add output
+  table.insert(cmd_parts, "-o")
+  table.insert(cmd_parts, "compiled_journal.pdf")
+
+  vim.notify("Compiling " .. #journal_files .. " journal entries...", vim.log.levels.INFO)
+
+  -- Run pandoc using vim.system (avoids shell entirely)
+  local result = vim.system(cmd_parts):wait()
+
+  -- Return to original directory
+  vim.cmd("cd " .. vim.fn.fnameescape(original_dir))
+
+  if result.code == 0 then
+    vim.notify("Journal compiled successfully!", vim.log.levels.INFO)
   else
-    vim.notify("Journal compilation failed: " .. result, vim.log.levels.ERROR)
+    local error_msg = result.stderr or "Unknown error"
+    vim.notify("Compilation failed: " .. error_msg, vim.log.levels.ERROR)
   end
 end
 
-vim.api.nvim_create_user_command("JrnlCompile", compile_journal, { desc = "Compile all JRNL-*.md files into PDF" })
+vim.api.nvim_create_user_command("JrnlNew", new_journal_note, { desc = "Create new journal entry" })
+vim.api.nvim_create_user_command("JrnlCompile", compile_journal, { desc = "Compile journal to PDF" })
 
--- ---------- keymaps ----------
--- Add to your existing keymaps section
 vim.keymap.set("n", "<leader>jn", ":JrnlNew<CR>", { desc = "Journal: New entry" })
 vim.keymap.set("n", "<leader>jc", ":JrnlCompile<CR>", { desc = "Journal: Compile to PDF" })
