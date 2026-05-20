@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Python virtual environment (platform-specific, never commit)
+nvim_venv/
+
+# Session state
+Session.vim
+
+# Claude Code local settings
+lua/.claude/
