@@ -1,7 +1,7 @@
 local function open_float_terminal_with_command(cmd)
   -- 1. Create a scratch buffer (not listed, no file)
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.bo[buf].bufhidden = "wipe"
 
   -- 2. Get the dimensions of the current window (the active split)
   local cur_width = vim.api.nvim_win_get_width(0)

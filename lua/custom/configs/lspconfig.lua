@@ -3,43 +3,45 @@ local config = require "plugins.configs.lspconfig"
 local on_attach = config.on_attach
 local capabilities = config.capabilities
 
-local lspconfig = require "lspconfig"
-
-lspconfig.jedi_language_server.setup {
+local common = {
   on_attach = on_attach,
   capabilities = capabilities,
+}
+
+vim.lsp.config("jedi_language_server", vim.tbl_extend("force", common, {
   filetypes = { "python" },
-}
+}))
+vim.lsp.enable("jedi_language_server")
 
-lspconfig.hls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+vim.lsp.config("hls", vim.tbl_extend("force", common, {
   filetypes = { "haskell", "lhaskell", "cabal" },
-}
+}))
+vim.lsp.enable("hls")
 
-lspconfig.matlab_ls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+require "custom.language_specific_commands.matlab"
+vim.lsp.config("matlab_ls", vim.tbl_extend("force", common, {
   filetypes = { "matlab" },
-  require "custom.language_specific_commands.matlab",
-}
+}))
+vim.lsp.enable("matlab_ls")
 
-lspconfig.clangd.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+vim.lsp.config("clangd", vim.tbl_extend("force", common, {
   filetypes = { "c", "cpp" },
-}
+}))
+vim.lsp.enable("clangd")
 
-lspconfig.marksman.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+require "custom.language_specific_commands.markdown"
+vim.lsp.config("marksman", vim.tbl_extend("force", common, {
   filetypes = { "markdown" },
-  require "custom.language_specific_commands.markdown_and_tex",
-}
+}))
+vim.lsp.enable("marksman")
 
-lspconfig.texlab.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
+require "custom.language_specific_commands.tex"
+vim.lsp.config("texlab", vim.tbl_extend("force", common, {
   filetypes = { "tex" },
-  require "custom.language_specific_commands.markdown_and_tex",
-}
+}))
+vim.lsp.enable("texlab")
+
+vim.lsp.config("julia_ls", vim.tbl_extend("force", common, {
+  filetypes = { "julia" },
+}))
+vim.lsp.enable("julia_ls")

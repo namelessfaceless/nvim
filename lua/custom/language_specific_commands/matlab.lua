@@ -58,8 +58,7 @@ end, {
   desc = "Prepend '%[' to each line (MATLAB Live Script style)",
 })
 
--- map <leader>mc in normal+visual to comment
-vim.keymap.set("n", "<leader>mc", ":'<,'>CommentLive<CR>", { noremap = true, silent = true })
+-- map <leader>mc in visual mode to comment (only works with selection)
 vim.keymap.set("v", "<leader>mc", ":CommentLive<CR>", { noremap = true, silent = true })
 
 print "MATLAB Keybinds & Live‑Script Commenter Loaded"

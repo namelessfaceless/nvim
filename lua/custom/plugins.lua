@@ -14,6 +14,8 @@ local plugins = {
         "marksman",
         "ruff",
         "jedi-language-server",
+        "julialsp",
+        "texlab",
 
         --- formatters
         "stylua",
@@ -27,6 +29,7 @@ local plugins = {
   },
   {
     "neovim/nvim-lspconfig",
+    event = "User FilePost",
     config = function()
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
@@ -185,8 +188,28 @@ local plugins = {
     lazy = false, -- we don't want to lazy load VimTeX
     -- tag = "v2.15", -- uncomment to pin to a specific release
     init = function()
-      -- VimTeX configuration goes here, e.g.
-      vim.g.vimtex_view_method = "zathura"
+      -- Set the compiler to latexmk which will respect the % !TEX program directive
+      vim.g.vimtex_compiler_method = "latexmk"
+
+      -- Configure latexmk to use lualatex by default
+      vim.g.vimtex_compiler_latexmk = {
+        build_dir = "",
+        callback = 1,
+        continuous = 1,
+        executable = "latexmk",
+        options = {
+          "-lualatex", -- Use lualatex
+          "-verbose",
+          "-file-line-error",
+          "-synctex=1",
+          "-interaction=nonstopmode",
+        },
+      }
+
+      -- Set PDF viewer (optional - adjust for your system)
+      vim.g.vimtex_view_method = "skim" -- or 'zathura', 'general', etc.
+      vim.g.vimtex_view_skim_sync = 1
+      vim.g.vimtex_view_skim_activate = 1
     end,
   },
 
