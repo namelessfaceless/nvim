@@ -13,13 +13,6 @@ local plugins = {
         "ruff",                -- Python linter/formatter
         "jedi-language-server", -- Python
 
-        --- formatters
-        "stylua",
-        "clang-format",
-        "black",
-
-        --- other
-        "tree-sitter-cli",
       },
     },
   },
@@ -29,19 +22,6 @@ local plugins = {
     config = function()
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
-    end,
-  },
-  {
-    "mfussenegger/nvim-dap",
-    init = function()
-      require("core.utils").load_mappings "dap"
-    end,
-  },
-  {
-    "theHamsta/nvim-dap-virtual-text",
-    lazy = false,
-    config = function(_, opts)
-      require("nvim-dap-virtual-text").setup()
     end,
   },
   {
@@ -87,49 +67,6 @@ local plugins = {
       suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
       root_dir = vim.fn.stdpath "data" .. "/sessions/",
     },
-  },
-  {
-    "stevearc/conform.nvim",
-    event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
-    keys = {
-      {
-        -- Customize or remove this keymap to your liking
-        "<leader>F",
-        function()
-          require("conform").format { async = true }
-        end,
-        mode = "",
-        desc = "Format buffer",
-      },
-    },
-    -- This will provide type hinting with LuaLS
-    ---@module "conform"
-    ---@type conform.setupOpts
-    opts = {
-      -- Define your formatters
-      formatters_by_ft = {
-        lua = { "stylua" },
-        python = { "black" },
-        c = { "clang-format" },
-      },
-      -- Set default options
-      default_format_opts = {
-        lsp_format = "fallback",
-      },
-      -- Set up format-on-save
-      format_on_save = { timeout_ms = 500 },
-      -- Customize formatters
-      formatters = {
-        shfmt = {
-          prepend_args = { "-i", "2" },
-        },
-      },
-    },
-    init = function()
-      -- If you want the formatexpr, here is the place to set it
-      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-    end,
   },
   {
     "rcarriga/nvim-notify",
