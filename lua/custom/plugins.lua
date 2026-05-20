@@ -90,23 +90,6 @@ local plugins = {
     end,
   },
   {
-    "susliko/tla.nvim",
-    ft = { "tla" },
-    config = function()
-      require("tla").setup {
-        java_executable = "/usr/bin/java",
-        java_opts = { "-XX:+UseParallelGC" },
-      }
-    end,
-  },
-  {
-    "florentc/vim-tla",
-    ft = { "tla" },
-    -- Optional: specify events or commands for lazy loading
-    event = "BufRead",
-    cmd = { "TLAPlusCommand" },
-  },
-  {
     "rmagatti/auto-session",
     lazy = false,
     keys = {
