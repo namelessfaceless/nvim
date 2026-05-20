@@ -15,18 +15,6 @@ M.dap = {
   },
 }
 
-M.crates = {
-  plugin = true,
-  n = {
-    ["<leader>rcu"] = {
-      function()
-        require("crates").upgrade_all_crates()
-      end,
-      "update crates",
-    },
-  },
-}
-
 -- Function to show diagnostics on hover
 vim.api.nvim_create_autocmd("CursorHold", {
   callback = function()

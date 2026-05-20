@@ -1,7 +1,6 @@
 -- ~/.config/nvim/lua/custom/language_specific_commands/tex.lua
 
-local GRP = vim.api.nvim_create_augroup("TeXWithNabla", { clear = true })
-local nabla_setup = require "custom.language_specific_commands.nabla_setup"
+local GRP = vim.api.nvim_create_augroup("TeXSettings", { clear = true })
 
 -- Textcolor highlight operator: wraps motions/selections in \textcolor{color}{...}
 local function make_textcolor_op(color)
@@ -131,23 +130,5 @@ vim.api.nvim_create_autocmd("FileType", {
     -- Remove textcolor wrapper entirely
     vim.keymap.set("n", "<leader>tx", remove_textcolor, { buffer = buf, desc = "Remove \\textcolor wrapper" })
 
-    -- Setup Nabla (conceal settings + keymaps)
-    nabla_setup.setup(buf)
-  end,
-})
-
--- Re-enable Nabla virtual text after writes (if cleared)
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = GRP,
-  pattern = { "*.tex", "*.ltx" },
-  callback = function(args)
-    local ft = vim.bo[args.buf].filetype
-    if ft ~= "tex" or not vim.b[args.buf].nabla_enabled then
-      return
-    end
-    local ok_nabla, nabla = pcall(require, "nabla")
-    if ok_nabla then
-      nabla.enable_virt()
-    end
   end,
 })

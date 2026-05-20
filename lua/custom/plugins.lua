@@ -6,21 +6,17 @@ local plugins = {
     opts = {
       ensure_installed = {
         --- lsp
-        "rust-analyzer",
-        "haskell-language-server",
-        "matlab-language-server",
+        "omnisharp",           -- C#
         "lua-language-server",
-        "clangd",
-        "marksman",
-        "ruff",
-        "jedi-language-server",
-        "julialsp",
-        "texlab",
+        "clangd",              -- C/C++
+        "marksman",            -- Markdown
+        "ruff",                -- Python linter/formatter
+        "jedi-language-server", -- Python
 
         --- formatters
         "stylua",
         "clang-format",
-        "fourmolu",
+        "black",
 
         --- other
         "tree-sitter-cli",
@@ -36,37 +32,9 @@ local plugins = {
     end,
   },
   {
-    "mrcjkb/rustaceanvim",
-    version = "^4",
-    ft = { "rust" },
-  },
-  {
     "mfussenegger/nvim-dap",
     init = function()
       require("core.utils").load_mappings "dap"
-    end,
-  },
-  {
-    "saecki/crates.nvim",
-    ft = { "rust", "toml" },
-    config = function(_, opts)
-      local crates = require "crates"
-      crates.setup(opts)
-      require("cmp").setup.buffer {
-        sources = { { name = "crates" } },
-      }
-      crates.show()
-      require("core.utils").load_mappings "crates"
-    end,
-  },
-  {
-    "rust-lang/rust.vim",
-    ft = "rust",
-    init = function()
-      vim.g.rustfmt_autosave = 1
-    end,
-    config = function()
-      require "custom.language_specific_commands.rust"
     end,
   },
   {
@@ -85,7 +53,6 @@ local plugins = {
         behavior = cmp.ConfirmBehavior.Insert,
         select = false,
       }
-      table.insert(M.sources, { name = "crates" })
       return M
     end,
   },
@@ -118,7 +85,7 @@ local plugins = {
     ---@type AutoSession.Config
     opts = {
       suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
-      root_dir = os.getenv "HOME" .. "/Documents/Dane's Vault/.sessions/",
+      root_dir = vim.fn.stdpath "data" .. "/sessions/",
     },
   },
   {
@@ -144,8 +111,6 @@ local plugins = {
       formatters_by_ft = {
         lua = { "stylua" },
         python = { "black" },
-        rust = { "rustfmt" },
-        haskell = { "fourmolu" },
         c = { "clang-format" },
       },
       -- Set default options
@@ -165,41 +130,6 @@ local plugins = {
       -- If you want the formatexpr, here is the place to set it
       vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
     end,
-  },
-  {
-    "lervag/vimtex",
-    lazy = false, -- we don't want to lazy load VimTeX
-    -- tag = "v2.15", -- uncomment to pin to a specific release
-    init = function()
-      -- Set the compiler to latexmk which will respect the % !TEX program directive
-      vim.g.vimtex_compiler_method = "latexmk"
-
-      -- Configure latexmk to use lualatex by default
-      vim.g.vimtex_compiler_latexmk = {
-        build_dir = "",
-        callback = 1,
-        continuous = 1,
-        executable = "latexmk",
-        options = {
-          "-lualatex", -- Use lualatex
-          "-verbose",
-          "-file-line-error",
-          "-synctex=1",
-          "-interaction=nonstopmode",
-        },
-      }
-
-      -- Set PDF viewer (optional - adjust for your system)
-      vim.g.vimtex_view_method = "skim" -- or 'zathura', 'general', etc.
-      vim.g.vimtex_view_skim_sync = 1
-      vim.g.vimtex_view_skim_activate = 1
-    end,
-  },
-
-  {
-    "jbyuki/nabla.nvim",
-    lazy = true,
-    ft = { "markdown", "tex" }, -- load only when editing Markdown/TeX
   },
   {
     "rcarriga/nvim-notify",
