@@ -21,6 +21,7 @@ local plugins = {
         "stylua",
         "clang-format",
         "fourmolu",
+        "black",
 
         --- other
         "tree-sitter-cli",
