@@ -6,4 +6,5 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 
 require "custom.language_specific_commands.cadquery"
 require "custom.git_quickpush"
+require "custom.sessions"
 print "Custom init settings loaded."
