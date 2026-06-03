@@ -33,10 +33,11 @@ M.copilotchat = {
     ["<leader>cx"] = { "<cmd>CopilotChatExplain<CR>", "CopilotChat explain buffer" },
     ["<leader>cp"] = {
       function()
-        local input = vim.fn.input "CopilotChat: "
-        if input ~= "" then
-          vim.api.nvim_cmd({ cmd = "CopilotChat", args = { input } }, {})
-        end
+        vim.ui.input({ prompt = "CopilotChat: " }, function(input)
+          if input and input ~= "" then
+            vim.api.nvim_cmd({ cmd = "CopilotChat", args = { input } }, {})
+          end
+        end)
       end,
       "CopilotChat quick prompt",
     },

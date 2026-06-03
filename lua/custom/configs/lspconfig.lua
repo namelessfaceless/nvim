@@ -11,6 +11,8 @@ local common = {
 }
 
 local function setup_server(name, opts)
+  -- vim.lsp.config / vim.lsp.enable are the public Neovim 0.11+ API.
+  -- Falling back to lspconfig keeps this branch working on 0.10 installs too.
   if vim.lsp.config and vim.lsp.enable then
     vim.lsp.config(name, opts)
     vim.lsp.enable(name)
