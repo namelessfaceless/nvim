@@ -23,4 +23,30 @@ M.copilot = {
   },
 }
 
+M.copilotchat = {
+  n = {
+    ["<leader>co"] = { "<cmd>CopilotChatOpen<CR>", "CopilotChat open" },
+    ["<leader>ct"] = { "<cmd>CopilotChatToggle<CR>", "CopilotChat toggle" },
+    ["<leader>cf"] = { "<cmd>CopilotChatFix<CR>", "CopilotChat fix buffer" },
+    ["<leader>cr"] = { "<cmd>CopilotChatRefactor<CR>", "CopilotChat refactor buffer" },
+    ["<leader>cg"] = { "<cmd>CopilotChatTests<CR>", "CopilotChat generate tests" },
+    ["<leader>cx"] = { "<cmd>CopilotChatExplain<CR>", "CopilotChat explain buffer" },
+    ["<leader>cp"] = {
+      function()
+        local input = vim.fn.input "CopilotChat: "
+        if input ~= "" then
+          vim.api.nvim_cmd({ cmd = "CopilotChat", args = { input } }, {})
+        end
+      end,
+      "CopilotChat quick prompt",
+    },
+  },
+  v = {
+    ["<leader>cf"] = { "<cmd>CopilotChatFix<CR>", "CopilotChat fix selection" },
+    ["<leader>cr"] = { "<cmd>CopilotChatRefactor<CR>", "CopilotChat refactor selection" },
+    ["<leader>cg"] = { "<cmd>CopilotChatTests<CR>", "CopilotChat generate tests" },
+    ["<leader>cx"] = { "<cmd>CopilotChatExplain<CR>", "CopilotChat explain selection" },
+  },
+}
+
 return M
