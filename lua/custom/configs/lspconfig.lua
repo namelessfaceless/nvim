@@ -8,40 +8,28 @@ local common = {
   capabilities = capabilities,
 }
 
+-- Python
 vim.lsp.config("jedi_language_server", vim.tbl_extend("force", common, {
   filetypes = { "python" },
 }))
 vim.lsp.enable("jedi_language_server")
 
-vim.lsp.config("hls", vim.tbl_extend("force", common, {
-  filetypes = { "haskell", "lhaskell", "cabal" },
-}))
-vim.lsp.enable("hls")
-
-require "custom.language_specific_commands.matlab"
-vim.lsp.config("matlab_ls", vim.tbl_extend("force", common, {
-  filetypes = { "matlab" },
-}))
-vim.lsp.enable("matlab_ls")
-
+-- C / C++
 vim.lsp.config("clangd", vim.tbl_extend("force", common, {
   filetypes = { "c", "cpp" },
 }))
 vim.lsp.enable("clangd")
 
+-- Markdown
 require "custom.language_specific_commands.markdown"
 vim.lsp.config("marksman", vim.tbl_extend("force", common, {
   filetypes = { "markdown" },
 }))
 vim.lsp.enable("marksman")
 
-require "custom.language_specific_commands.tex"
-vim.lsp.config("texlab", vim.tbl_extend("force", common, {
-  filetypes = { "tex" },
+-- C# (omnisharp installed via Mason)
+vim.lsp.config("omnisharp", vim.tbl_extend("force", common, {
+  filetypes = { "cs" },
+  cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
 }))
-vim.lsp.enable("texlab")
-
-vim.lsp.config("julia_ls", vim.tbl_extend("force", common, {
-  filetypes = { "julia" },
-}))
-vim.lsp.enable("julia_ls")
+vim.lsp.enable("omnisharp")
