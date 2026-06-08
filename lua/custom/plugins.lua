@@ -2,26 +2,6 @@ local cmp = require "cmp"
 
 local plugins = {
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup {
-        suggestion = { enabled = false }, -- use copilot-cmp instead
-        panel = { enabled = false },
-      }
-    end,
-  },
-
-  {
-    "zbirenbaum/copilot-cmp",
-    dependencies = { "zbirenbaum/copilot.lua" },
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  },
-
-  {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
@@ -46,7 +26,6 @@ local plugins = {
   },
   {
     "hrsh7th/nvim-cmp",
-    dependencies = { "zbirenbaum/copilot-cmp" },
     opts = function()
       local M = require "plugins.configs.cmp"
       M.completion.completeopt = "menu,menuone,noselect"
@@ -54,7 +33,6 @@ local plugins = {
         behavior = cmp.ConfirmBehavior.Insert,
         select = false,
       }
-      table.insert(M.sources, 1, { name = "copilot" })
       return M
     end,
   },
