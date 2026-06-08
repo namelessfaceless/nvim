@@ -2,26 +2,6 @@ local cmp = require "cmp"
 
 local plugins = {
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup {
-        suggestion = { enabled = false }, -- use copilot-cmp instead
-        panel = { enabled = false },
-      }
-    end,
-  },
-
-  {
-    "zbirenbaum/copilot-cmp",
-    dependencies = { "zbirenbaum/copilot.lua" },
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  },
-
-  {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
